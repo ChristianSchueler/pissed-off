@@ -6,6 +6,7 @@
 #include "driver/uart.h"
 //#include "esp_err.h"
 #include "coin-acceptor.h"
+#include "load-cell.h"
 
 #define PUMP_PIN GPIO_NUM_1
 
@@ -45,7 +46,7 @@ void app_main(void)
     // ESP_ERROR_CHECK(uart_param_config(COIN_ACCEPTOR_UART_NUM, &uart_config));
     // ESP_ERROR_CHECK(uart_set_pin(COIN_ACCEPTOR_UART_NUM, GPIO_NUM_17, GPIO_NUM_18, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 
-
+    load_cell_init();
     coin_acceptor_init();
 
     //int i = 0;
