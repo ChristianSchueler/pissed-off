@@ -4,7 +4,8 @@
 #include "coin-acceptor.h"
 
 #define COIN_ACCEPTOR_UART_NUM UART_NUM_1
-#define COIN_ACCEPTOR_RX_PIN GPIO_NUM_18
+#define COIN_ACCEPTOR_RX_PIN GPIO_NUM_18               // white wire
+#define COIN_ACCEPTOR_INHIBIT_GPIO_PIN GPIO_NUM_17     // blue wire
 #define BUF_SIZE 256
 
 int coin_acceptor_initialized = 0;              // initialized true/false

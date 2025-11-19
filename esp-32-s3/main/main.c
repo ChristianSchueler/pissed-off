@@ -46,13 +46,21 @@ void app_main(void)
     // ESP_ERROR_CHECK(uart_param_config(COIN_ACCEPTOR_UART_NUM, &uart_config));
     // ESP_ERROR_CHECK(uart_set_pin(COIN_ACCEPTOR_UART_NUM, GPIO_NUM_17, GPIO_NUM_18, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 
-    load_cell_init();
     coin_acceptor_init();
+    load_cell_init();
 
-    //int i = 0;
+    int onoff = 0;
     while (1) {
         coin_acceptor_loop();
+        load_cell_loop();
 
+        if (coin_acceptor_get_amount_cents() >= 300) {
+            printf("Paid.\n");
+            onoff = !onoff;
+            printf("on/off: %d\n", onoff);
+            gpio_set_level(PUMP_PIN, onoff);    // toggle GPIO pin high / low
+            coin_acceptor_reset_amount();
+        }
         //printf("[%d] Hello world!\n", i);
         //int onoff = i % 2;
         //printf("on/off: %d\n", onoff);
@@ -71,6 +79,6 @@ void app_main(void)
         //     printf("\n");
         // }
 
-        vTaskDelay(100 / portTICK_PERIOD_MS);
+        vTaskDelay(500 / portTICK_PERIOD_MS);
     }
 }

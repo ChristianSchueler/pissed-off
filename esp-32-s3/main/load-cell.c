@@ -1,10 +1,14 @@
 #include <hx711.h>
 #include <driver/gpio.h>
 #include "load-cell.h"
+#include "esp_log.h"
+
+#define LOAD_CELL_DT_GPIO_PIN GPIO_NUM_4              // green wire: pin for incoming data signal from hx711
+#define LOAD_CELL_SCK_GPIO_PIN GPIO_NUM_5             // yellow wire: pin for outgoing clock signal to hx711
 
 hx711_t dev = {
-    .dout = GPIO_NUM_11,
-    .pd_sck = GPIO_NUM_11,
+    .dout = LOAD_CELL_DT_GPIO_PIN,
+    .pd_sck = LOAD_CELL_SCK_GPIO_PIN,
     .gain = HX711_GAIN_A_64
 };
 
@@ -31,5 +35,5 @@ void load_cell_loop() {
     }
 
     ESP_LOGI("hx711", "Raw data: %", data);     // PRIi32?
-    printf("hx711: %d\n", data);
+    printf("hx711: %ld\n", data);
 }
