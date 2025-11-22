@@ -1,3 +1,5 @@
+// (c) 2025, Christian Schüeler, hello@christianschueler.at
+
 #include <stdio.h>
 #include <driver/gpio.h>
 #include "driver/uart.h"
