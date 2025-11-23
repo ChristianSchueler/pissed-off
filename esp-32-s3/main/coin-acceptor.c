@@ -1,4 +1,4 @@
-// (c) 2025, Christian Schüeler, hello@christianschueler.at
+// (c) 2025, Christian Schüler, hello@christianschueler.at
 //
 // - assumes coin acceptor DG600F
 // - dip switches: 1 - OFF, 2 - OFF, 3 - ON (RS232), 4 - OFF
@@ -101,11 +101,13 @@ int coin_acceptor_get_amount_since_start_cents() {
 }
 
 void coin_acceptor_enable() {
+    printf("coin acceptor: enabled");
     coin_acceptor_enabled = true;
     gpio_set_level(COIN_ACCEPTOR_INHIBIT_GPIO_PIN, coin_acceptor_enabled);
 }
 
 void coin_acceptor_disable() {
+    printf("coin acceptor: disabled");
     coin_acceptor_enabled = false;
     gpio_set_level(COIN_ACCEPTOR_INHIBIT_GPIO_PIN, coin_acceptor_enabled);
 }

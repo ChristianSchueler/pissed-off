@@ -16,9 +16,10 @@ controls:
 
 ## Ideas and Todo
 
-- nive to have: count all coins across the session and store overall coint coin, preferably by day + have a way to output the amount
+- nive to have: count all donated coins across the session and store overall coint coin, preferably by day + have a way to output the amount
   - could use NVS to store an int 32 per day, marked by key name, e.g. key = "coins_2025-11-23", value = 4000 meaning EUR 40,-
-  - would have to use NVS iterator to get all coins OR simply try to get keys for certain dates
+  - would have to use NVS iterator to get all coins donated OR simply try to get keys for certain dates
+- nice to have: drink size depending on amount donated, e.g. 2 sizes
 
 ## Loop
 
@@ -26,7 +27,9 @@ controls:
 - INSERT_COIN: when coins reach price AND load = empty cup:
   - switch on peristaltic pump
   - state -> DISPENSING
-- DISPENSING: when load = full cup OR timeout:
+- DISPENSING: 
+  - measure dispensed
+  - when load = full cup OR timeout (empty supply):
     - switch off peristaltic pump
     - state -> TAKE_CUP
 - TAKE_CUP: when load = empty:

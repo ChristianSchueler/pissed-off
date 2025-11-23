@@ -1,4 +1,4 @@
-// (c) 2025, Christian Schüeler, hello@christianschueler.at
+// (c) 2025, Christian Schüler, hello@christianschueler.at
 
 #ifndef COIN_ACCEPTOR_H
 #define COIN_ACCEPTOR_H

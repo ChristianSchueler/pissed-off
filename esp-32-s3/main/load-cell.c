@@ -1,4 +1,4 @@
-// (c) 2025, Christian Schüeler, hello@christianschueler.at
+// (c) 2025, Christian Schüler, hello@christianschueler.at
 //
 // - load cell using HV711 chip
 // - measure the raw data for a known weight and fill in SCALE_FACTOR
@@ -17,10 +17,12 @@
 
 #define SCALE_FACTOR 567927/500                       // hx711 raw reading when loaded with 500 g
 
+// internal use for calibration
 int32_t load_cell_offset;
 float load_cell_scale;
 
-float load_cell_last_load;
+// last measured load
+float load_cell_last_load_grams;
 
 hx711_t dev = {
     .dout = LOAD_CELL_DT_GPIO_PIN,
@@ -30,26 +32,29 @@ hx711_t dev = {
 
 void load_cell_init() {
 
+    printf("load cell: initializing...");
     ESP_ERROR_CHECK(hx711_init(&dev));
     
     load_cell_offset = 0;
     load_cell_scale = SCALE_FACTOR;
-    load_cell_last_load = LOAD_CELL_INVALID_VALUE;
+    load_cell_last_load_grams = LOAD_CELL_INVALID_VALUE;
 
     load_cell_tare();
+    printf("load cell: initialized.");
 }
 
 void load_cell_loop() {
     
-    load_cell_last_load = load_cell_get_value_grams();
-    printf("load cell: weight: %.1f g\n", load_cell_last_load);
+    load_cell_last_load_grams = load_cell_read_value_grams();
+    printf("load cell: weight: %.1f g\n", load_cell_last_load_grams);
 }
 
 void load_cell_tare() {
-    load_cell_offset = load_cell_get_value_raw();
+    printf("load cell: tare");
+    load_cell_offset = load_cell_read_value_raw();
 }
 
-int32_t load_cell_get_value_raw() {
+int32_t load_cell_read_value_raw() {
 
     // wait until chip is ready with timeout
     esp_err_t r = hx711_wait(&dev, WAIT_READ_TIMEOUT_MS);
@@ -73,13 +78,17 @@ int32_t load_cell_get_value_raw() {
     return data;
 }
 
-float load_cell_get_value_grams() {
+float load_cell_read_value_grams() {
     
-    int32_t data = load_cell_get_value_raw();
+    int32_t data = load_cell_read_value_raw();
 
     // account for offset and scale factor
     int32_t offsetData = data-load_cell_offset;
     float scaleData = offsetData / load_cell_scale;
 
     return scaleData;
+}
+
+float load_cell_get_last_load_grams() {
+    return load_cell_last_load_grams;
 }
