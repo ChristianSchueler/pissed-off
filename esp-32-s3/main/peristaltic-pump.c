@@ -6,6 +6,9 @@
 
 #define PUMP_PIN GPIO_NUM_1
 
+// how many milli liters of drinks we dispensed
+float peristaltic_pump_amount_dispensed_ml;
+
 gpio_config_t io_conf = {
     .pin_bit_mask = (1ULL << PUMP_PIN),      // Select GPIO 1
     .mode = GPIO_MODE_OUTPUT,                // Set as output
@@ -18,6 +21,8 @@ void peristaltic_pump_init() {
     
     gpio_config(&io_conf);
     gpio_set_level(PUMP_PIN, 0);
+
+    peristaltic_pump_amount_dispensed_ml = 0;
 }
 
 int onoff = 0;

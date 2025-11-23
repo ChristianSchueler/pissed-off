@@ -7,9 +7,14 @@
 
 void coin_acceptor_init();
 void coin_acceptor_loop();
+
 void coin_acceptor_reset_amount();
 int coin_acceptor_get_amount_cents();
+void coin_acceptor_reset_amount_since_start();
+int coin_acceptor_get_amount_since_start_cents();
+
 void coin_acceptor_enable();
 void coin_acceptor_disable();
+bool coin_acceptor_get_enabled(); 
 
 #endif

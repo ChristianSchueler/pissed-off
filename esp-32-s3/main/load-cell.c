@@ -1,4 +1,7 @@
 // (c) 2025, Christian Schüeler, hello@christianschueler.at
+//
+// - load cell using HV711 chip
+// - measure the raw data for a known weight and fill in SCALE_FACTOR
 
 #include <hx711.h>
 #include <driver/gpio.h>
@@ -12,7 +15,7 @@
 #define READ_AVERAGE_SAMPLES 5
 #define LOAD_CELL_INVALID_VALUE -1000000
 
-#define SCALE_FACTOR 567927/500                       // hx711 reading when loaded with 500 g
+#define SCALE_FACTOR 567927/500                       // hx711 raw reading when loaded with 500 g
 
 int32_t load_cell_offset;
 float load_cell_scale;
@@ -39,7 +42,7 @@ void load_cell_init() {
 void load_cell_loop() {
     
     load_cell_last_load = load_cell_get_value_grams();
-    printf("weight: %.1f g\n", load_cell_last_load);
+    printf("load cell: weight: %.1f g\n", load_cell_last_load);
 }
 
 void load_cell_tare() {
@@ -64,8 +67,8 @@ int32_t load_cell_get_value_raw() {
         return LOAD_CELL_INVALID_VALUE;
     }
 
-    ESP_LOGI("hx711", "Raw data: %", data);     // PRIi32?
-    printf("hx711: %ld\n", data);
+    ESP_LOGI("load cell: hx711", "Raw data: %", data);     // PRIi32?
+    printf("load cell: hx711 raw data %ld\n", data);
 
     return data;
 }
