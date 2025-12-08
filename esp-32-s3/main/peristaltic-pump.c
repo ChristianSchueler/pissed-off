@@ -21,12 +21,12 @@ int peristaltic_pump_onoff = 0;
 
 void peristaltic_pump_init() {
     
-    printf("peristaltic pump: initializing...");
+    printf("peristaltic pump: initializing...\n");
     gpio_config(&io_conf);
     gpio_set_level(PERISTALTIC_PUMP_PIN, 0);
 
     peristaltic_pump_amount_dispensed_ml = 0;
-    printf("peristaltic pump: initialized.");
+    printf("peristaltic pump: initialized.\n");
 }
 
 void peristaltic_pump_loop() {
@@ -59,13 +59,13 @@ void peristaltic_pump_loop() {
 }
 
 void set_peristaltic_pump_on() {
-    printf("peristaltic pump: on");
+    printf("peristaltic pump: on\n");
     peristaltic_pump_onoff = 1;
     gpio_set_level(PERISTALTIC_PUMP_PIN, peristaltic_pump_onoff);    // toggle GPIO pin high
 }
 
 void set_peristaltic_pump_off() {
-    printf("peristaltic pump: off");
+    printf("peristaltic pump: off\n");
     peristaltic_pump_onoff = 0;
     gpio_set_level(PERISTALTIC_PUMP_PIN, peristaltic_pump_onoff);    // toggle GPIO pin high
 }

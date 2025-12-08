@@ -32,7 +32,7 @@ hx711_t dev = {
 
 void load_cell_init() {
 
-    printf("load cell: initializing...");
+    printf("load cell: initializing...\n");
     ESP_ERROR_CHECK(hx711_init(&dev));
     
     load_cell_offset = 0;
@@ -40,7 +40,7 @@ void load_cell_init() {
     load_cell_last_load_grams = LOAD_CELL_INVALID_VALUE;
 
     load_cell_tare();
-    printf("load cell: initialized.");
+    printf("load cell: initialized.\n");
 }
 
 void load_cell_loop() {

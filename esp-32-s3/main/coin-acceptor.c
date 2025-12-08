@@ -44,7 +44,7 @@ gpio_config_t coin_acceptor_io_conf = {
 
 void coin_acceptor_init() {
 
-    printf("coin acceptor: initializing...");
+    printf("coin acceptor: initializing...\n");
     ESP_ERROR_CHECK(uart_driver_install(COIN_ACCEPTOR_UART_NUM, BUF_SIZE, 0, 0, NULL, 0));      // not using interrupts
     ESP_ERROR_CHECK(uart_param_config(COIN_ACCEPTOR_UART_NUM, &coin_acceptor_uart_config));
     ESP_ERROR_CHECK(uart_set_pin(COIN_ACCEPTOR_UART_NUM, UART_PIN_NO_CHANGE, COIN_ACCEPTOR_RX_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
@@ -53,7 +53,7 @@ void coin_acceptor_init() {
     gpio_set_level(COIN_ACCEPTOR_INHIBIT_GPIO_PIN, coin_acceptor_enabled);
 
     coin_acceptor_initialized = true;
-    printf("coin acceptor: initialized.");
+    printf("coin acceptor: initialized.\n");
 }
 
 void coin_acceptor_loop() {
@@ -101,13 +101,13 @@ int coin_acceptor_get_amount_since_start_cents() {
 }
 
 void coin_acceptor_enable() {
-    printf("coin acceptor: enabled");
+    printf("coin acceptor: enabled\n");
     coin_acceptor_enabled = true;
     gpio_set_level(COIN_ACCEPTOR_INHIBIT_GPIO_PIN, coin_acceptor_enabled);
 }
 
 void coin_acceptor_disable() {
-    printf("coin acceptor: disabled");
+    printf("coin acceptor: disabled\n");
     coin_acceptor_enabled = false;
     gpio_set_level(COIN_ACCEPTOR_INHIBIT_GPIO_PIN, coin_acceptor_enabled);
 }
