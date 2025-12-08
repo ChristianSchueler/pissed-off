@@ -46,7 +46,7 @@ void load_cell_init() {
 void load_cell_loop() {
     
     load_cell_last_load_grams = load_cell_read_value_grams();
-    printf("load cell: weight: %.1f g\n", load_cell_last_load_grams);
+    // printf("load cell: weight: %.1f g\n", load_cell_last_load_grams);
 }
 
 void load_cell_tare() {
@@ -72,8 +72,8 @@ int32_t load_cell_read_value_raw() {
         return LOAD_CELL_INVALID_VALUE;
     }
 
-    ESP_LOGI("load cell: hx711", "Raw data: %", data);     // PRIi32?
-    printf("load cell: hx711 raw data %ld\n", data);
+    //ESP_LOGI("load cell: hx711", "Raw data: %", data);     // PRIi32?
+    //printf("load cell: hx711 raw data %ld\n", data);
 
     return data;
 }

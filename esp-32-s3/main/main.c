@@ -10,6 +10,8 @@
 #include "load-cell.h"
 #include <esp_timer.h>
 
+#define VERSION 0.8
+
 enum State {
   INSERT_COIN,
   DISPENSING,
@@ -30,9 +32,18 @@ uint64_t dispensing_started_time_ms;          // when we started to dispense; us
 
 void app_main(void)
 {
+    printf("Pissed Off - Mechatronic Interactive Cocktail Maschine, (c) 2025 Christian Schüler, hello@christianschueler.at\n");
+    printf("Version: %1.1f\n", VERSION);
+
+    printf("application: starting initialization...\n");
     peristaltic_pump_init();    // first, such that even if everythink else fails, the pump gets stopped
     coin_acceptor_init();
     load_cell_init();
+
+    printf("application: initialized.\n");
+
+    printf("starting main loop, tick duration: %d ms.\n", MAIN_LOOP_DELAY_MS);
+    printf("pissed off: insert coin\n");
 
     while (1) {
         peristaltic_pump_loop();
@@ -47,7 +58,7 @@ void app_main(void)
           case INSERT_COIN:    
             if (coins >= COCKTAIL_DONATION_CENTS && 
                 weight >= CUP_WEIGHT_MIN_GRAMS && weight <= CUP_WEIGHT_MAX_GRAMS) {
-                  printf("pissed off: coins donated and cup placed -> dispensing");
+                  printf("pissed off: coins donated and cup placed -> dispensing\n");
                   initial_weight_grams = weight;
                   dispensing_started_time_ms = esp_timer_get_time();
                   set_peristaltic_pump_on();
@@ -59,8 +70,8 @@ void app_main(void)
             int drink_dispensed_ml = load_cell_get_last_load_grams() - initial_weight_grams;    // assuming ml == grams
             uint64_t duration_ms = esp_timer_get_time() - dispensing_started_time_ms;
             if (drink_dispensed_ml >= COCKTAIL_SIZE_ML || duration_ms > DISPENSING_TIMEOUT_MS) {
-              if (duration_ms > DISPENSING_TIMEOUT_MS) printf("pissed off: ERROR ran out of supply");
-              else printf("pissed off: cup filled -> take cup");
+              if (duration_ms > DISPENSING_TIMEOUT_MS) printf("pissed off: ERROR ran out of supply\n");
+              else printf("pissed off: cup filled -> take cup\n");
               set_peristaltic_pump_off();
               state = TAKE_CUP;
             }
@@ -68,7 +79,7 @@ void app_main(void)
 
           case TAKE_CUP:
             if (weight < CUP_WEIGHT_MIN_GRAMS) {
-              printf("pissed off: cup taken -> insert coin");
+              printf("pissed off: cup taken -> insert coin\n");
               coin_acceptor_reset_amount();
               load_cell_tare();                       // reset load cell every time to account for drift
               state = INSERT_COIN;
