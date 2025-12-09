@@ -26,11 +26,13 @@ enum State {
 #define CUP_WEIGHT_MAX_GRAMS 20               // maximum empty cup weight
 #define DISPENSING_TIMEOUT_MS 1000*60         // after dispensing time out we stop; most probably empty supply
 #define MIN_FILL_DURATION_MS 1000             // how long we fill the cup at least, even if someone removed the cup (necessary to ignore load scale measures bouncing)
+#define MIN_DISPENSING_DELAY_MS 1000*2        // start 2 s after (!) placing the cup to make sure shaky hands do get splashed (trust me with this one)
 
 enum State state = INSERT_COIN;
 
 float initial_weight_grams;                   // remember weight when starting to fill the cup. most probably very small
 uint64_t dispensing_started_time_ms;          // when we started to dispense; used for timeout
+uint64_t cup_placed_time_ms;                  // when we placed the cup; used to wait a bit until the hands are away
 
 void app_main(void)
 {
@@ -61,9 +63,32 @@ void app_main(void)
         #endif
 
         switch (state) {
-          case INSERT_COIN:    
+          // -------------------------------------------------------------------------------------------------------------------------------------------
+          case INSERT_COIN:
+            int cup_placed = (weight >= CUP_WEIGHT_MIN_GRAMS && weight <= CUP_WEIGHT_MAX_GRAMS);    // true when cup is present
+
+            // remember when we placed the cup (or -1 when no cup present)
+            if (cup_placed) {   // if cup has been placed just now
+              if (cup_placed_time_ms < 0) {
+                cup_placed_time_ms = esp_timer_get_time()/1000;
+                printf("pissed off: empty cup has been placed\n");
+              }
+            }
+            else {     // if cup has been lifted just now
+              cup_placed_time_ms = -1;
+              printf("pissed off: empty cup has been taken\n");
+            }
+
+            // compute how long the cup has been present (or -1 when not present)
+            uint64_t duration_cup_present_ms;
+            if (cup_placed && cup_placed_time_ms >= 0) {
+              duration_cup_present_ms = (esp_timer_get_time() - cup_placed_time_ms*1000)/1000;
+            }
+            else duration_cup_present_ms = -1;
+
             if (coins >= COCKTAIL_DONATION_CENTS && 
-                weight >= CUP_WEIGHT_MIN_GRAMS && weight <= CUP_WEIGHT_MAX_GRAMS) {   // if enough donation and cup is present
+                cup_placed &&
+                duration_cup_present_ms >= MIN_DISPENSING_DELAY_MS) {   // if enough donation and cup is present and at least some time has passed since placing the cup
                   printf("pissed off: coins donated and cup placed -> dispensing\n");
                   initial_weight_grams = weight;
                   dispensing_started_time_ms = esp_timer_get_time()/1000;
@@ -72,6 +97,7 @@ void app_main(void)
                 }
             break;
 
+          // -------------------------------------------------------------------------------------------------------------------------------------------
           case DISPENSING:
             int drink_dispensed_ml = weight - initial_weight_grams;    // assuming ml == grams
             uint64_t duration_ms = (esp_timer_get_time() - dispensing_started_time_ms*1000)/1000;
@@ -95,6 +121,7 @@ void app_main(void)
             }
             break;
 
+          // -------------------------------------------------------------------------------------------------------------------------------------------
           case TAKE_CUP:
             if (weight < CUP_WEIGHT_MIN_GRAMS) {
               printf("pissed off: cup taken -> insert coin\n");

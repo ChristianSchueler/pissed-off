@@ -16,8 +16,6 @@ controls:
 
 ## Ideas and Todo
 
-- IMPLEMENT: OR load = 0 (someone took cup or cup fell)
-- IMPLEMENT: when coins reach price -> for a defined duration
 - nive to have: count all donated coins across the session and store overall coint coin, preferably by day + have a way to output the amount
   - could use NVS to store an int 32 per day, marked by key name, e.g. key = "coins_2025-11-23", value = 4000 meaning EUR 40,-
   - would have to use NVS iterator to get all coins donated OR simply try to get keys for certain dates
