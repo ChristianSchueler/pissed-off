@@ -24,7 +24,7 @@ enum State {
 #define COCKTAIL_SIZE_ML 100                  // cocktail size for donation
 #define CUP_WEIGHT_MIN_GRAMS 3                // minimum empty cup weight, used to identify placement of a cup
 #define CUP_WEIGHT_MAX_GRAMS 20               // maximum empty cup weight
-#define DISPENSING_TIMEOUT_MS 1000*20         // after dispensing time out we stop; most probably empty supply
+#define DISPENSING_TIMEOUT_MS 1000*60         // after dispensing time out we stop; most probably empty supply
 
 enum State state = INSERT_COIN;
 

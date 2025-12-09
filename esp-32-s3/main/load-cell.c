@@ -8,6 +8,8 @@
 #include "load-cell.h"
 #include "esp_log.h"
 
+#define DEBUG_PRINTF 1
+
 #define LOAD_CELL_DT_GPIO_PIN GPIO_NUM_4              // green wire: pin for incoming data signal from hx711
 #define LOAD_CELL_SCK_GPIO_PIN GPIO_NUM_5             // yellow wire: pin for outgoing clock signal to hx711
 
@@ -15,7 +17,7 @@
 #define READ_AVERAGE_SAMPLES 5
 #define LOAD_CELL_INVALID_VALUE -1000000
 
-#define SCALE_FACTOR 567927/500                       // hx711 raw reading when loaded with 500 g
+#define SCALE_FACTOR 531848./500                       // hx711 raw reading when loaded with 500 g
 
 // internal use for calibration
 int32_t load_cell_offset;
@@ -39,6 +41,8 @@ void load_cell_init() {
     load_cell_scale = SCALE_FACTOR;
     load_cell_last_load_grams = LOAD_CELL_INVALID_VALUE;
 
+    printf("load cell: load_cell_scale=%f\n", load_cell_scale);
+
     load_cell_tare();
     printf("load cell: initialized.\n");
 }
@@ -46,12 +50,15 @@ void load_cell_init() {
 void load_cell_loop() {
     
     load_cell_last_load_grams = load_cell_read_value_grams();
-    // printf("load cell: weight: %.1f g\n", load_cell_last_load_grams);
+    #ifdef DEBUG_PRINTF
+    printf("load cell: weight: %.1f g\n", load_cell_last_load_grams);
+    #endif
 }
 
 void load_cell_tare() {
-    printf("load cell: tare");
+    printf("load cell: tare\n");
     load_cell_offset = load_cell_read_value_raw();
+    printf("load cell: load_cell_offset=%ld\n", load_cell_offset);
 }
 
 int32_t load_cell_read_value_raw() {
@@ -72,8 +79,10 @@ int32_t load_cell_read_value_raw() {
         return LOAD_CELL_INVALID_VALUE;
     }
 
+    #ifdef DEBUG_PRINTF
     //ESP_LOGI("load cell: hx711", "Raw data: %", data);     // PRIi32?
-    //printf("load cell: hx711 raw data %ld\n", data);
+    printf("DEBUG - load cell: hx711 raw data %ld\n", data);
+    #endif
 
     return data;
 }

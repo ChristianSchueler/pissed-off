@@ -128,7 +128,7 @@ esp_err_t hx711_set_gain(hx711_t *dev, hx711_gain_t gain)
 {
     CHECK_ARG(dev && gain <= HX711_GAIN_A_64);
 
-    CHECK(hx711_wait(dev, 200)); // 200 ms timeout
+    CHECK(hx711_wait(dev, 500)); // 500 ms timeout
 
     read_raw(dev->dout, dev->pd_sck, gain);
     dev->gain = gain;

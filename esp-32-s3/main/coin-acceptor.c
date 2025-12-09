@@ -64,7 +64,7 @@ void coin_acceptor_loop() {
     ESP_ERROR_CHECK(uart_get_buffered_data_len(COIN_ACCEPTOR_UART_NUM, (size_t*)&length));
     if (length > 0) {
         length = uart_read_bytes(COIN_ACCEPTOR_UART_NUM, coin_acceptor_read_buffer, length, 100);
-        printf("coin acceptor: %d bytes received: 0x ", length);
+        printf("coin acceptor: %d bytes received: 0x", length);
         for (int i=0; i<length; i++) { 
             printf("%x", coin_acceptor_read_buffer[i]); 
             if (i < length-1) printf(" ");
