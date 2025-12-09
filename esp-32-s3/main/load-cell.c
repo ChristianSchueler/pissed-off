@@ -17,7 +17,7 @@
 #define READ_AVERAGE_SAMPLES 5
 #define LOAD_CELL_INVALID_VALUE -1000000
 
-#define SCALE_FACTOR 531848./500                       // hx711 raw reading when loaded with 500 g
+#define SCALE_FACTOR 500. / (531848 - 71000)              // m / (x1 - x0), x0 = hx711 raw reading when loaded with 0 g, x1 = raw reading with 500 g
 
 // internal use for calibration
 int32_t load_cell_offset;
@@ -92,8 +92,9 @@ float load_cell_read_value_grams() {
     int32_t data = load_cell_read_value_raw();
 
     // account for offset and scale factor
-    int32_t offsetData = data-load_cell_offset;
-    float scaleData = offsetData / load_cell_scale;
+    // basically: m / (x1 - x0) * (x - x0)
+    int32_t offsetData = data - load_cell_offset;         // account for load cell offset (= measurement with 0 g load)
+    float scaleData = offsetData * load_cell_scale;       // scale factor (depends on two measurements)
 
     return scaleData;
 }
