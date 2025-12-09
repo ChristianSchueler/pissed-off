@@ -17,7 +17,8 @@
 #define READ_AVERAGE_SAMPLES 5
 #define LOAD_CELL_INVALID_VALUE -1000000
 
-#define SCALE_FACTOR 500. / (531848 - 71000)              // m / (x1 - x0), x0 = hx711 raw reading when loaded with 0 g, x1 = raw reading with 500 g
+// 70623
+#define SCALE_FACTOR 500. / (531848 - 74670)              // m / (x1 - x0), x0 = hx711 raw reading when loaded with 0 g, x1 = raw reading with 500 g
 
 // internal use for calibration
 int32_t load_cell_offset;
@@ -41,9 +42,9 @@ void load_cell_init() {
     load_cell_scale = SCALE_FACTOR;
     load_cell_last_load_grams = LOAD_CELL_INVALID_VALUE;
 
-    printf("load cell: load_cell_scale=%f\n", load_cell_scale);
-
+    // reset offset to current value (make sure load cell has no extra weight!)
     load_cell_tare();
+
     printf("load cell: initialized.\n");
 }
 
@@ -57,8 +58,13 @@ void load_cell_loop() {
 
 void load_cell_tare() {
     printf("load cell: tare\n");
+    
     load_cell_offset = load_cell_read_value_raw();
+    // re-calculate scale due to different offset (and assume the 500 g weight measurement stays the same, which it doesn't, but hey)
+    load_cell_scale = 500. / (531848 - load_cell_offset);
+
     printf("load cell: load_cell_offset=%ld\n", load_cell_offset);
+    printf("load cell: load_cell_scale=%f\n", load_cell_scale);
 }
 
 int32_t load_cell_read_value_raw() {

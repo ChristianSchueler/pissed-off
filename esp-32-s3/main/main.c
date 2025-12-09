@@ -19,7 +19,7 @@ enum State {
   TAKE_CUP
 };
 
-#define MAIN_LOOP_DELAY_MS 1000                // how much we intentionally slow down the main loop -> 100 ms by default
+#define MAIN_LOOP_DELAY_MS 100                // how much we intentionally slow down the main loop -> 100 ms by default
 #define COCKTAIL_DONATION_CENTS 300           // how much to donate at least
 #define COCKTAIL_SIZE_ML 100                  // default cocktail size
 #define CUP_WEIGHT_MIN_GRAMS 3                // minimum empty cup weight, used to identify placement of a cup
@@ -32,7 +32,7 @@ enum State state = INSERT_COIN;
 
 float initial_weight_grams;                   // remember weight when starting to fill the cup. most probably very small
 uint64_t dispensing_started_time_ms;          // when we started to dispense; used for timeout
-uint64_t cup_placed_time_ms;                  // when we placed the cup; used to wait a bit until the hands are away
+long int cup_placed_time_ms = -1;             // when we placed the cup; used to wait a bit until the hands are away
 
 void app_main(void)
 {
@@ -75,14 +75,17 @@ void app_main(void)
               }
             }
             else {     // if cup has been lifted just now
-              cup_placed_time_ms = -1;
-              printf("pissed off: empty cup has been taken\n");
+              if (cup_placed_time_ms > 0) {
+                cup_placed_time_ms = -1;
+                printf("pissed off: empty cup has been taken\n");
+              }
             }
 
             // compute how long the cup has been present (or -1 when not present)
-            uint64_t duration_cup_present_ms;
+            long int duration_cup_present_ms;
             if (cup_placed && cup_placed_time_ms >= 0) {
               duration_cup_present_ms = (esp_timer_get_time() - cup_placed_time_ms*1000)/1000;
+              printf("pissed off: cup present duration: %ld ms\n", duration_cup_present_ms);
             }
             else duration_cup_present_ms = -1;
 
@@ -117,6 +120,7 @@ void app_main(void)
             else if (tookCup) {   // someone removed the cup mid-dispensing ot it "fell" down -> stop!
               printf("pissed off: ERROR cup removed -> insert coin\n");
               set_peristaltic_pump_off();
+              cup_placed_time_ms = -1;
               state = INSERT_COIN;
             }
             break;
@@ -126,6 +130,7 @@ void app_main(void)
             if (weight < CUP_WEIGHT_MIN_GRAMS) {
               printf("pissed off: cup taken -> insert coin\n");
               coin_acceptor_reset_amount();
+              cup_placed_time_ms = -1;
               load_cell_tare();                       // reset load cell every time to account for drift
               state = INSERT_COIN;
             }
