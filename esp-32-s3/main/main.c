@@ -19,12 +19,13 @@ enum State {
   TAKE_CUP
 };
 
-#define MAIN_LOOP_DELAY_MS 1000                // how much we intentionally slow down the main loop
-#define COCKTAIL_DONATION_CENTS 30           // how much to donate at least
-#define COCKTAIL_SIZE_ML 100                  // cocktail size for donation
+#define MAIN_LOOP_DELAY_MS 1000                // how much we intentionally slow down the main loop -> 100 ms by default
+#define COCKTAIL_DONATION_CENTS 300           // how much to donate at least
+#define COCKTAIL_SIZE_ML 100                  // default cocktail size
 #define CUP_WEIGHT_MIN_GRAMS 3                // minimum empty cup weight, used to identify placement of a cup
 #define CUP_WEIGHT_MAX_GRAMS 20               // maximum empty cup weight
 #define DISPENSING_TIMEOUT_MS 1000*60         // after dispensing time out we stop; most probably empty supply
+#define MIN_FILL_DURATION_MS 1000             // how long we fill the cup at least, even if someone removed the cup (necessary to ignore load scale measures bouncing)
 
 enum State state = INSERT_COIN;
 
@@ -62,7 +63,7 @@ void app_main(void)
         switch (state) {
           case INSERT_COIN:    
             if (coins >= COCKTAIL_DONATION_CENTS && 
-                weight >= CUP_WEIGHT_MIN_GRAMS && weight <= CUP_WEIGHT_MAX_GRAMS) {
+                weight >= CUP_WEIGHT_MIN_GRAMS && weight <= CUP_WEIGHT_MAX_GRAMS) {   // if enough donation and cup is present
                   printf("pissed off: coins donated and cup placed -> dispensing\n");
                   initial_weight_grams = weight;
                   dispensing_started_time_ms = esp_timer_get_time()/1000;
@@ -72,17 +73,25 @@ void app_main(void)
             break;
 
           case DISPENSING:
-            int drink_dispensed_ml = load_cell_get_last_load_grams() - initial_weight_grams;    // assuming ml == grams
+            int drink_dispensed_ml = weight - initial_weight_grams;    // assuming ml == grams
             uint64_t duration_ms = (esp_timer_get_time() - dispensing_started_time_ms*1000)/1000;
+            int tookCup = (weight < CUP_WEIGHT_MIN_GRAMS && duration_ms >= MIN_FILL_DURATION_MS);
+
             #ifdef DEBUG_PRINTF
             printf("DEBUG - drink_dispensed_ml: %d\n", drink_dispensed_ml);
             printf("DEBUG - duration_ms: %lld\n", duration_ms);
             #endif
-            if (drink_dispensed_ml >= COCKTAIL_SIZE_ML || duration_ms > DISPENSING_TIMEOUT_MS) {
+
+            if (drink_dispensed_ml >= COCKTAIL_SIZE_ML || duration_ms > DISPENSING_TIMEOUT_MS) {    // cup is filled or timeout (e.g. ran out of booze)
               if (duration_ms > DISPENSING_TIMEOUT_MS) printf("pissed off: ERROR ran out of supply\n");
               else printf("pissed off: cup filled -> take cup\n");
               set_peristaltic_pump_off();
               state = TAKE_CUP;
+            }
+            else if (tookCup) {   // someone removed the cup mid-dispensing ot it "fell" down -> stop!
+              printf("pissed off: ERROR cup removed -> insert coin\n");
+              set_peristaltic_pump_off();
+              state = INSERT_COIN;
             }
             break;
 

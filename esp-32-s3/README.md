@@ -33,7 +33,7 @@ controls:
   - measure dispensed
   - when load = full cup OR timeout (empty supply) OR load = 0 (someone took cup or cup fell):
     - switch off peristaltic pump
-    - state -> TAKE_CUP
+    - state -> TAKE_CUP or INSERT_COIN if someone took the cup
 - TAKE_CUP: when load = empty:
     - reset coins
     - (tare?)
