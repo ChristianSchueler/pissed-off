@@ -4,9 +4,10 @@
 
 ```
 Gips gegossen in 1,5 mm PLA 3D Druck Form, 6 mm Sperrholz Box, 8 mm Aluminiumrohr, 
-2,5 mm Silikonkautschukschlauch, ESP32-S3 Mikrocontroller, LM2596 DC-DC Spannungswandler, 
-Wägezelle 1 kg mit Dehnmessstreifen, HX711 24 Bit A/D-Wandler, DG600F Münzprüfer, 12 V 
-Peristaltikpumpe mit Controllerboard, 1-Kanal Relais, Waagschale PLA 3D Druck, 10 l Wasserkanister. 
+2,5 mm Silikonkautschukschlauch, ESP32-S3 Mikrocontroller, 492 Zeilen C Code, LM2596
+DC-DC Spannungswandler, Wägezelle 1 kg mit Dehnmessstreifen, HX711 24 Bit A/D-Wandler, 
+DG600F Münzprüfer, 12 V Peristaltikpumpe mit Controllerboard, 1-Kanal Relais, 
+Waagschale PLA 3D Druck, 10 l Wasserkanister.
 ```
 
 See /esp-32-s3 subfolder for microcontroller source code.
