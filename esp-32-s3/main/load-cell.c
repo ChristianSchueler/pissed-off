@@ -8,7 +8,7 @@
 #include "load-cell.h"
 #include "esp_log.h"
 
-#define DEBUG_PRINTF 1
+//#define DEBUG_PRINTF 1
 
 #define LOAD_CELL_DT_GPIO_PIN GPIO_NUM_4              // green wire: pin for incoming data signal from hx711
 #define LOAD_CELL_SCK_GPIO_PIN GPIO_NUM_5             // yellow wire: pin for outgoing clock signal to hx711

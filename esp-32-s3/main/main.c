@@ -11,7 +11,7 @@
 #include <esp_timer.h>
 
 #define VERSION 1.0
-#define DEBUG_PRINTF 0
+//#define DEBUG_PRINTF 1
 
 enum State {
   INSERT_COIN,          // donate coins
@@ -80,6 +80,7 @@ void app_main(void)
               if (cup_placed_time_ms < 0) {
                 cup_placed_time_ms = esp_timer_get_time()/1000;
                 printf("pissed off: empty cup has been placed\n");
+                printf("pissed off: empty cup weight: %1.1f g\n", weight);
               }
             }
             else {     // if cup has been lifted just now
@@ -93,7 +94,9 @@ void app_main(void)
             long int duration_cup_present_ms;
             if (cup_placed && cup_placed_time_ms >= 0) {
               duration_cup_present_ms = (esp_timer_get_time() - cup_placed_time_ms*1000)/1000;
+              #ifdef DEBUG_PRINTF
               printf("pissed off: cup present duration: %ld ms\n", duration_cup_present_ms);
+              #endif
             }
             else duration_cup_present_ms = -1;
 
@@ -107,6 +110,7 @@ void app_main(void)
                   if (coins >= COCKTAIL_MIN_DONATION_LARGE_CENTS) targetDrinkSize_ml = COCKTAIL_SIZE_LARGE_ML;
                   else targetDrinkSize_ml = COCKTAIL_SIZE_SMALL_ML;
 
+                  printf("pissed off: drink size selected: %d ml\n", targetDrinkSize_ml);
                   printf("pissed off: coins donated and cup placed -> dispensing\n");
 
                   initial_weight_grams = weight;
