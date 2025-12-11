@@ -11,7 +11,7 @@
 #include <esp_timer.h>
 
 #define VERSION 1.0
-#define DEBUG_PRINTF 1
+#define DEBUG_PRINTF 0
 
 enum State {
   INSERT_COIN,          // donate coins
@@ -26,7 +26,7 @@ enum State {
 #define COCKTAIL_SIZE_LARGE_ML 180            // large drink is 18 ml, as in original recipe
 #define CUP_WEIGHT_MIN_GRAMS 3                // minimum empty cup weight, used to identify placement of a cup
 #define CUP_WEIGHT_MAX_GRAMS 20               // maximum empty cup weight
-#define DISPENSING_TIMEOUT_MS 1000*60         // after dispensing time out we stop; most probably empty supply
+#define DISPENSING_TIMEOUT_MS 1500*60         // after dispensing time out we stop; most probably empty supply
 #define MIN_FILL_DURATION_MS 1000             // how long we fill the cup at least, even if someone removed the cup (necessary to ignore load scale measures bouncing)
 #define MIN_DISPENSING_DELAY_MS 1000*2        // start 2 s after (!) placing the cup to make sure shaky hands do get splashed (trust me with this one)
 
@@ -44,7 +44,7 @@ int64_t cup_placed_time_ms = -1;              // when we placed the cup; used to
 
 void app_main(void)
 {
-    printf("Pissed Off - Mechatronic Interactive Cocktail Maschine, (c) 2025 Christian Schüler, hello@christianschueler.at\n");
+    printf("Pissed Off - Mechatronic Interactive Cocktail Machine, (c) 2025 Christian Schüler, hello@christianschueler.at\n");
     printf("Version: %1.1f\n", VERSION);
 
     printf("application: starting initialization...\n");
