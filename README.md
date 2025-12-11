@@ -24,6 +24,7 @@ This ESP-32 code controls the following hardware:
 
 - count coins, measure load
 - INSERT_COIN: when coins reach price for a defined duration AND load = empty cup:
+  - set drink size based on donation (hint: does only work if donating first, then placing cup)
   - switch on peristaltic pump
   - state -> DISPENSING
 - DISPENSING: 
@@ -55,4 +56,3 @@ look for ttyACM0 (on my machine) and set in esp-idf config
 - nive to have: count all donated coins across the session and store overall coint coin, preferably by day + have a way to output the amount
   - could use NVS to store an int 32 per day, marked by key name, e.g. key = "coins_2025-11-23", value = 4000 meaning EUR 40,-
   - would have to use NVS iterator to get all coins donated OR simply try to get keys for certain dates
-- nice to have: drink size depending on amount donated, e.g. 2 sizes
