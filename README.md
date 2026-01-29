@@ -6,7 +6,7 @@ Interactive exhibit of "Petit Julien" ("Manneken Piss"), urinating drinks.
 > you. Admit it: you’ve already dreamt of that at least once.
 > [Roboexotica 2025](https://roboexotica.at/?exhibition2025)
 
-See also: [Photos of exhibition](https://www.esel.at/de/album/roboexotica-2025--031s2bxzYJqxJ13hXJkv2q)
+Roboexotica 2025: [Photos of exhibition](https://www.esel.at/de/album/roboexotica-2025--031s2bxzYJqxJ13hXJkv2q)
 
 The statue is made of plaster, sized 2/3 of the original. It features a liquid
 pumping system, a digital scale and a coin acceptor to donate coins. It is controlled by a ESP-32 and C code.
