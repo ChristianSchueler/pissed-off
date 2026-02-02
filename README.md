@@ -22,7 +22,7 @@ PLA 3D-printed weighing pan, 10 L water canister.
 
 See /esp-32-s3 subfolder for microcontroller source code.
 
-![pissed off project on display during exhibition: statue on wooden box.](pissed-off-2025_640x853.jpg)
+![pissed off project on display during exhibition: statue on wooden box.](pissed-off-render_photo.jpg)
 
 # Pissed Off ESP32-S3 Code
 
