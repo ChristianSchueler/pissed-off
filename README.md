@@ -75,4 +75,8 @@ look for ttyACM0 (on my machine) and set in esp-idf config
 
 Files in STL format sit in /3d_cad and have been created in OnShape. The mold is split in half and then again split in 4 parts for printing.
 
+# Updates
+
+* 15.02.2026: fixed "relay not working". reason: relay power 3.3 V too low. solution: raised overall voltage from 3.3 V to 5.0 V via the DC-DC converter. switched esp-32 power connector from 3.3 V pin to 5V pin.
+
 (c) 2025, Christian Schüler, hello@christianschueler.at
